@@ -1,6 +1,11 @@
 # 20textos
 Script em Python para um LLM criar 20 textos em formato .txt sobre um tema automaticamente.
 
+## Aviso:
+- **Não me responsabilizo pelo material produzido por esse script.** A qualidade do material produzido é diretamente relacionada com o modelo escolhido. E se você utilizar esse script para produzir material danoso ou ilegal a responsabilidade é sua.
+- **Não me responsabilizo se seu computador superaquecer ou pegar fogo.** Deixar um LLM funcionando por vários minutos ou horas pode superaquecer o seu computador. Monitore a temperatura e utilize ferramentas de controle de temperatura (como por exemplo [RyzenAdj](https://github.com/FlyGoat/RyzenAdj)).
+
+
 ## Função e Limitações 
 O que você pode fazer com esse script:
 - Automatizar a produção de conteúdos diversos com características que você escolher. Tutoriais, posts em redes sociais, etc.
@@ -53,3 +58,29 @@ O script utiliza algumas bibliotecas que já fazem parte da **Standard Library**
 
 ---
 
+## Resultados dos testes:
+
+Realizei várias avaliações usando Gemini 3 Rápido e DeepSeek para saber a qualidades dos materiais produzidos.
+Foi utilizado o LLM gemma-3n-E4B-it-Q4_K_M.gguf que ocupa ~4GB.
+A nota mais baixa verificada nas avaliações foi de 6/10 e mais alta 10/10.
+Os textos produzidos estão nas pastas Testes1 e Teste2.
+Links para você mesmo ler as avaliações:
+#### Teste 1:
+DeepSeek: 
+https://chat.deepseek.com/share/306ibamg2ezt0y2n3p
+Gemini:
+https://gemini.google.com/share/4027d53dee0b
+Backup dos links:
+DeepSeek: https://archive.is/CCHGe
+Gemini: https://archive.ph/mshey
+#### Teste 2:
+- DeepSeek: 
+[https://chat.deepseek.com/share/306ibamg2ezt0y2n3p
+](https://chat.deepseek.com/share/dfvbkoxsv7x0lmdo4l)
+- Gemini:
+[https://gemini.google.com/share/4027d53dee0b](https://gemini.google.com/share/fa67cef32f5a)
+Backup dos links:
+DeepSeek: [https://archive.is/isC1R](https://archive.is/isC1R) 
+Gemini: [https://archive.ph/mshey](https://archive.ph/Uho15)
+
+Script criado com Gemini 3 Rápido em Janeiro de 2026.
