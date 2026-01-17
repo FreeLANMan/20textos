@@ -61,18 +61,18 @@ O script utiliza algumas bibliotecas que já fazem parte da **Standard Library**
 ## Resultados dos testes:
 
 Realizei várias avaliações usando Gemini 3 Rápido e DeepSeek para saber a qualidades dos materiais produzidos.
-Foi utilizado o LLM gemma-3n-E4B-it-Q4_K_M.gguf que ocupa ~4GB.
-A nota mais baixa verificada nas avaliações foi de 6/10 e mais alta 10/10.
-Os textos produzidos estão nas pastas Testes1 e Teste2.
-Links para você mesmo ler as avaliações:
+- Foi utilizado o LLM gemma-3n-E4B-it-Q4_K_M.gguf que ocupa ~4GB. Foram mantidas as configurações padrão do aplicativo e modelo (menos Temperatura=0,7): Amostragem TOp-K=40, Penalidade de Repetição = 1,1, Amostragem Min-P = 0,05, etc.
+- A nota mais baixa verificada nas avaliações foi de 6/10 e mais alta 10/10.
+- Os textos produzidos estão nas pastas Testes1 e Teste2.
+- Links para você mesmo ler as avaliações:
 #### Teste 1:
 DeepSeek: 
-https://chat.deepseek.com/share/306ibamg2ezt0y2n3p
+[https://chat.deepseek.com/share/306ibamg2ezt0y2n3p]
 Gemini:
-https://gemini.google.com/share/4027d53dee0b
+[https://gemini.google.com/share/4027d53dee0b] 
 Backup dos links:
-DeepSeek: https://archive.is/CCHGe
-Gemini: https://archive.ph/mshey
+DeepSeek: [https://archive.is/CCHGe]
+Gemini: [https://archive.ph/mshey]
 #### Teste 2:
 - DeepSeek: 
 [https://chat.deepseek.com/share/306ibamg2ezt0y2n3p
