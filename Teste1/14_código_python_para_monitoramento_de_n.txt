@@ -1,0 +1,146 @@
+## Código Python para Monitoramento de Nível de Reservatórios
+
+Este tutorial fornece um código Python completo para monitorar o nível de reservatórios usando sensores, comunicação serial (ou outros protocolos) e armazenamento de dados em um arquivo.  O código inclui exemplos detalhados, comentários explicativos e opções de configuração.
+
+**Visão Geral:**
+
+1. **Hardware Requerido:**
+   * Sensor de Nível de Reservatório: Um sensor que fornece uma leitura do nível do reservatório (por exemplo, sensor ultrassônico, sensor de pressão).
+   * Microcontrolador/Placa de Desenvolvimento:  Arduino, Raspberry Pi ou similar para ler dados do sensor e enviar para o computador.
+   * Conversor Serial (se necessário): Para comunicação entre o microcontrolador e o computador.
+   * Computador com Python instalado.
+
+2. **Protocolo de Comunicação:**
+   * **Serial (UART):**  O método mais simples, usando uma conexão serial entre o microcontrolador e o computador.
+   * **TCP/IP:** Mais robusto para comunicação em rede, permitindo monitoramento remoto.  (Neste tutorial, focaremos no Serial).
+
+3. **Software Requerido:**
+   * Python (versão 3.x)
+   * Biblioteca `pyserial` (para comunicação serial): `pip install pyserial`
+
+**Esquema do Sistema:**
+
+```
+[Sensor de Nível] --(Serial)--> [Microcontrolador] --(Serial)--> [Computador (Python Script)] --> [Armazenamento de Dados] --> [Visualização/Análise]
+```
+
+**Código Python (monitor_reservatorio.py):**
+
+```python
+import serial
+import time
+import datetime
+
+# Configurações do Serial
+PORT = 'COM3'  # Substitua pelo seu porta serial (ex: '/dev/ttyACM0' no Linux)
+BAUD_RATE = 9600 # Taxa de baud (deve corresponder à configuração do microcontrolador)
+
+# Configurações do Arquivo de Log
+LOG_FILE = 'reservatorio.log'
+INTERVALO_LEITURA = 5  # Intervalo em segundos entre as leituras
+
+def ler_nivel(ser):
+    """Lê o nível do reservatório do sensor via comunicação serial."""
+    try:
+        linha = ser.readline().decode('utf-8').rstrip() # Lê a linha e decodifica para string, removendo espaços extras
+        # Assumindo que o microcontrolador envia o nível em formato "NIVEL:XX.XX"
+        nivel = float(linha.split(':')[1])  # Extrai o valor do nível (ex: 2.5)
+
+        print(f"Nível lido: {nivel}")
+        return nivel
+
+    except ValueError:
+        print("Erro ao ler o nível do sensor.")
+        return None
+    except Exception as e:
+        print(f"Erro inesperado: {e}")
+        return None
+
+
+def registrar_log(nivel):
+    """Registra o nível no arquivo de log, incluindo data e hora."""
+    if nivel is not None:
+      data_hora = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+      with open(LOG_FILE, 'a') as f: # Abre o arquivo em modo append ('a')
+          f.write(f"{data_hora},{nivel}\n")  # Escreve data/hora e nível separados por vírgula
+
+
+
+def main():
+    """Função principal que inicia a comunicação serial, lê o nível e registra no log."""
+
+    try:
+        ser = serial.Serial(PORT, BAUD_RATE) # Abre a conexão serial
+        print(f"Conectado à porta {PORT} na taxa de baud {BAUD_RATE}")
+
+
+        while True:
+            nivel = ler_nivel(ser)
+
+            if nivel is not None:
+                registrar_log(nivel)  # Registra o nível no arquivo de log
+
+            time.sleep(INTERVALO_LEITURA) # Espera o intervalo definido
+
+    except KeyboardInterrupt:
+        print("Programa interrompido pelo usuário.")
+    except Exception as e:
+        print(f"Erro durante a execução: {e}")
+    finally:
+        if 'ser' in locals() and ser.is_open:  # Verifica se o serial foi aberto para evitar erros
+            ser.close() # Fecha a conexão serial
+
+
+if __name__ == "__main__":
+    main()
+
+```
+
+**Código do Microcontrolador (Exemplo - Arduino):**
+
+```arduino
+const int sensorPin = A0; // Pino analógico onde o sensor está conectado
+
+void setup() {
+  Serial.begin(9600); // Inicia a comunicação serial na taxa de baud 9600
+}
+
+void loop() {
+  // Lógica para ler o nível do sensor (substitua com sua lógica real)
+  int sensorValue = analogRead(sensorPin);  // Lê o valor analógico do sensor
+
+  // Converter o valor analógico para uma leitura de nível (ajuste os valores conforme necessário)
+  float nivel = map(sensorValue, 0, 1023, 0, 100); // Converte 0-1023 para 0-100
+
+  // Envia o nível para o computador em formato "NIVEL:XX.XX"
+  Serial.print("NIVEL:");
+  Serial.println(nivel);
+
+  delay(500); // Espera um pouco antes da próxima leitura
+}
+```
+
+**Instruções:**
+
+1. **Instale a biblioteca `pyserial`:**  Abra o terminal e execute `pip install pyserial`.
+2. **Configure as configurações do Serial:** No código Python, ajuste as variáveis `PORT` e `BAUD_RATE` para corresponderem à configuração do seu microcontrolador.
+3. **Conecte o Sensor:** Conecte o sensor de nível ao microcontrolador de acordo com as instruções do fabricante do sensor.  No exemplo acima, assumimos que o sensor está conectado a um pino analógico (A0) no Arduino.
+4. **Carregue o Código no Microcontrolador:** Carregue o código do Arduino para o seu microcontrolador usando o IDE do Arduino ou outra ferramenta de programação.
+5. **Execute o Script Python:** Execute o script `monitor_reservatorio.py` no terminal.  Ele começará a ler o nível do reservatório, registrará no arquivo `reservatorio.log` e exibirá o nível na tela.
+6. **Verifique o Arquivo de Log:** Após a execução, verifique o arquivo `reservatorio.log` para ver as leituras de nível registradas.
+
+**Considerações Adicionais:**
+
+* **Calibração do Sensor:**  É importante calibrar o sensor para obter leituras precisas. Isso pode envolver a leitura do nível em diferentes pontos e a criação de uma fórmula para converter o valor bruto do sensor em um nível significativo.
+* **Tratamento de Erros:** O código inclui tratamento básico de erros, mas você pode adicionar mais tratamento para lidar com situações como falhas na comunicação serial ou leituras inválidas do sensor.
+* **Interface Gráfica (GUI):**  Para uma visualização mais amigável, você pode criar uma interface gráfica usando bibliotecas como Tkinter, PyQt ou Kivy.
+* **Monitoramento Remoto:** Para monitorar o nível do reservatório remotamente, você pode usar protocolos TCP/IP e configurar um servidor na sua rede para receber os dados do microcontrolador.  Isso permite acessar os dados de qualquer lugar com uma conexão à Internet.
+* **Alertas:** Você pode adicionar lógica ao script Python para gerar alertas quando o nível do reservatório atingir níveis críticos (muito alto ou muito baixo).
+
+**Observações importantes:**
+
+* Este é um exemplo básico e precisa ser adaptado às suas necessidades específicas, incluindo a configuração do sensor, o código do microcontrolador e as configurações de comunicação.
+* A escolha da taxa de baud deve corresponder à taxa configurada no microcontrolador.
+* Certifique-se de usar a porta serial correta para o seu dispositivo.
+
+Este tutorial fornece um ponto de partida sólido para monitorar o nível de reservatórios com Python.  Com as adaptações adequadas, você pode criar um sistema robusto e confiável que ajuda a garantir o gerenciamento eficiente dos recursos hídricos.
